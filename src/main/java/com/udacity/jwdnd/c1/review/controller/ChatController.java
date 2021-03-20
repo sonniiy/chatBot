@@ -9,32 +9,37 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+
 @Controller
 @RequestMapping("/chat")
 public class ChatController {
-
     private MessageService messageService;
-
     public ChatController(MessageService messageService) {
         this.messageService = messageService;
+        System.out.println("Created Controller bean");
+    }
+
+    @ModelAttribute
+    public ChatForm getChatForm(){
+        System.out.println("Created ChatForm Object");
+        return new ChatForm();
     }
 
     @GetMapping
-    public String getChatPage(ChatForm chatForm, Model model){
+    public String getChatPage(Model model){
         model.addAttribute("chatMessages", this.messageService.getChatMessages());
         return "chat";
     }
-
     @PostMapping
     public String postChatMessage(ChatForm chatForm, Model model){
         this.messageService.addMessage(chatForm);
         //chatForm.setMessageText("");
-        model.addAttribute("chatMessage", this.messageService.getChatMessages());
+        model.addAttribute("chatMessages", this.messageService.getChatMessages());
         return "chat";
     }
-
     @ModelAttribute("allMessageTypes")
-    public String[] allMessageTypes() { return new String[] { "Say", "Shout", "Whisper"};}
-
-
+    public String[] allMessageTypes() {
+        System.out.println("Created all MessagesTypes Object");
+        return new String[] { "Say", "Shout", "Whisper"};
+    }
 }
